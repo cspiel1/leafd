@@ -31,7 +31,7 @@ def publish_info(info, client):
     client.publish("leaf/is_connected", info.is_connected, retain=True)
     client.publish("leaf/is_connected_to_quick_charger", info.is_connected_to_quick_charger, retain=True)
     client.publish("leaf/battery_percent", info.battery_percent, retain=True)
-    client.publish("leaf/latest_date", info.answer["BatteryStatusRecords"]["OperationDateAndTime"])
+    client.publish("leaf/latest_date", info.answer["BatteryStatusRecords"]["OperationDateAndTime"], retain=True)
 
 
 def on_connect(client, userdata, flags, rc):
