@@ -7,3 +7,13 @@ Dependencies
 ```
 pip3 install pycarwings2
 ```
+
+
+Configuration
+-------------
+
+```
+cp config.ini my_config.ini
+```
+
+Edit `my_config.ini`!
