@@ -31,6 +31,7 @@ def publish_info(info, client):
     client.publish("leaf/is_connected", info.is_connected, retain=True)
     client.publish("leaf/is_connected_to_quick_charger", info.is_connected_to_quick_charger, retain=True)
     client.publish("leaf/battery_percent", info.battery_percent, retain=True)
+    client.publish("leaf/latest_date", info.answer["BatteryStatusRecords"]["OperationDateAndTime"])
 
 
 def on_connect(client, userdata, flags, rc):
@@ -73,6 +74,7 @@ key = None
 tkey = None
 retries = 6
 errstr = ''
+lastv = None
 while run:
     if time.time() >= t:
         print("requesting ...", flush=True)
@@ -82,7 +84,7 @@ while run:
         leaf_info = leaf.get_latest_battery_status()
         publish_info(leaf_info, client)
         key = leaf.request_update()
-        tkey = t + 30
+        tkey = time.time() + 30
 
     if tkey is not None and time.time() > tkey:
         status = leaf.get_status_from_update(key)
@@ -99,6 +101,13 @@ while run:
             retries = 6
             leaf_info = leaf.get_latest_battery_status()
             publish_info(leaf_info, client)
+            v = leaf_info.battery_percent
+            if lastv is None or abs(lastv - v) > 1:
+                dt = 900
+            else:
+                dt = 3600
+
+            lastv = v
             del leaf
 
     if (not run):
