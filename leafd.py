@@ -108,6 +108,8 @@ while run:
                 dt = 3600
 
             lastv = v
+            print('{0}% --> {1} seconds'.format(v, dt))
+
             del leaf
 
     if (not run):
